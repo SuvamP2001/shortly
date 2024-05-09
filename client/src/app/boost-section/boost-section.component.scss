@@ -1,0 +1,26 @@
+@use "../../mixins/_variables.scss" as var;
+@use "../../mixins/_mixin.scss" as m;
+
+.banner-section {
+  height: 31.5vh;
+  text-align: center;
+  align-content: center;
+  background-color: var.$dark-violet;
+  background-image: url("../../assets/images/bg-boost-mobile.svg");
+  background-repeat: no-repeat;
+  background-position-x: right;
+
+  @media (width >= 64rem) {
+    height: 41.5vh;
+    background-image: url("../../assets/images/bg-boost-desktop.svg");
+  }
+
+  h2 {
+    color: var.$snow-white;
+    margin-block: 2rem;
+  }
+
+  a {
+    @include m.btn-cyan;
+  }
+}

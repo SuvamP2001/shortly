@@ -1,10 +1,11 @@
 <main>
   <form>
-    <input type="text" placeholder="Shorten a link here" aria-label="link" />
+    <input type="text" placeholder="Shorten a link here.." aria-label="link" />
     <button type="submit">Shorten it!</button>
   </form>
 
   <div class="features-container">
+    <app-urls-list></app-urls-list>
     <div class="feature__about">
       <h2 class="feature__title">Advanced Statistics</h2>
       <p class="feature__description">
@@ -13,31 +14,39 @@
       </p>
     </div>
 
-    <div class="feature feature--1">
-      <img src="../../assets/images/icon-brand-recognition.svg" alt="" />
-      <h2 class="feature__title">Brand Recognition</h2>
-      <p class="feature__description">
-        Track how your links are performing across the web wiht our advanced
-        stastistics dashboard.
-      </p>
-    </div>
+    <div class="features-card-container">
+      <div class="feature-card feature--1">
+        <div class="feature-card__image">
+          <img src="../../assets/images/icon-brand-recognition.svg" alt="" />
+        </div>
+        <h2 class="feature-card__title">Brand Recognition</h2>
+        <p class="feature-card__description">
+          Track how your links are performing across the web wiht our advanced
+          stastistics dashboard.
+        </p>
+      </div>
 
-    <div class="feature feature--1">
-      <img src="../../assets/images/icon-brand-recognition.svg" alt="" />
-      <h2 class="feature__title">Detailed Records</h2>
-      <p class="feature__description">
-        Track how your links are performing across the web wiht our advanced
-        stastistics dashboard.
-      </p>
-    </div>
+      <div class="feature-card feature--2">
+        <div class="feature-card__image">
+          <img src="../../assets/images/icon-detailed-records.svg" alt="" />
+        </div>
+        <h2 class="feature-card__title">Detailed Records</h2>
+        <p class="feature-card__description">
+          Track how your links are performing across the web wiht our advanced
+          stastistics dashboard.
+        </p>
+      </div>
 
-    <div class="feature feature--1">
-      <img src="../../assets/images/icon-brand-recognition.svg" alt="" />
-      <h2 class="feature__title">Fully Customizable</h2>
-      <p class="feature__description">
-        Track how your links are performing across the web wiht our advanced
-        stastistics dashboard.
-      </p>
+      <div class="feature-card feature--3">
+        <div class="feature-card__image">
+          <img src="../../assets/images/icon-fully-customizable.svg" alt="" />
+        </div>
+        <h2 class="feature-card__title">Fully Customizable</h2>
+        <p class="feature-card__description">
+          Track how your links are performing across the web wiht our advanced
+          stastistics dashboard.
+        </p>
+      </div>
     </div>
   </div>
 </main>
