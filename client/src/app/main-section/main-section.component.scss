@@ -1,0 +1,47 @@
+@use "../../mixins/_variables.scss" as var;
+
+main {
+  position: relative;
+  min-height: 100vh;
+  background-color: var.$gray;
+  padding-block: 2rem;
+  padding-inline: 2rem;
+}
+
+form {
+  display: grid;
+  gap: 2rem;
+  padding-inline: 1rem;
+  padding-block: 1rem;
+  background-color: white;
+  background-image: url("../../assets/images/bg-shorten-mobile.svg");
+  background-repeat: no-repeat;
+  background-position: right center;
+  border-radius: 8px;
+  background-size: auto 100%;
+
+  input[type="text"] {
+    background-color: #fff;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    padding-block: 1rem;
+    padding-inline: 1rem;
+  }
+
+  button {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var.$snow-white;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    padding-block: 1rem;
+    padding-inline: 1rem;
+    background-color: var.$cyan;
+  }
+}
+
+.features-container {
+  text-align: center;
+}
