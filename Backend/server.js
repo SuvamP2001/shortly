@@ -16,25 +16,14 @@ const pool = {
   user: "sa",
   password: "sa",
   server: "IN-9XF3NX3",
-  database: "userdata",
+  database: "Shortly",
   options: {
     encrypt: true,
     trustServerCertificate: true,
   },
 };
 
-//Email config
-// let config = {
-//   host: "smtp.gmail.com",
-//   port: 587,
-//   auth: {
-//     user: "dev.ashwinalexander@gmail.com",
-//     pass: "fsqxginpqingrcnn",
-//   },
-// };
 
-// let transporter = nodemailer.createTransport(config);
-// transporter.verify().then(console.log).catch(console.error);
 
 app.get("/", (re, res) => {
   return res.json("From BAckend Side");
@@ -74,12 +63,6 @@ async function executeQuery(query) {
   }
 }
 
-// function generatedShortURL(OriginalURL){
-
-//   console.log("Short url:: ",Buffer.from(OriginalURL).toString('base64').slice(0,8));
-//   return Buffer.from(OriginalURL).toString('base64').slice(0,8);
-// }
-
 const crypto = require('crypto');
 
 function generateUniqueIdentifier(originalURL) {
@@ -94,6 +77,7 @@ function generateShortURL(originalURL) {
 
 app.post("/saveURL", async (req, res) => {
   console.log(req.body);
+  const UserID = req.body.UserID;
 
   const {OriginalURL}=req.body;
 
@@ -101,33 +85,143 @@ app.post("/saveURL", async (req, res) => {
 
   console.log(ShortURL);
   const result = await executeQuery(
-    "insert into URL (OriginalURL,ShortURL) values ('" +
-      req.body.OriginalURL + "','"+ ShortURL+
+    "insert into URL (OriginalURL,ShortenedURL,UserID) values ('" +
+      req.body.OriginalURL + "','"+ ShortURL+ "','" +UserID+
+      "');"
+  );
+
+  // const shortURLs = await executeQuery("SELECT ShortenedURL FROM URL WHERE UserID = ?", [UserID]);
+
+  return res.status(201).json({result});
+  // return res.status(201).json({result,shortURLs});
+});
+
+
+
+/*  USERS LIST  API */
+
+
+
+app.get("/Users",async(req,res) =>{
+  const result = await executeSelect("select Users.UserID,Users.Username,Users.Password,Users.RegistrationDate,URL.OriginalURL,URL.ShortenedURL,URL.CreationDate,URL.ExpiryDate from URL inner join Users on URL.UserID = Users.UserID");
+  return res.status(200).json(result);
+});
+
+
+const jwt = require('jsonwebtoken');
+
+app.post("/login", async (req, res) => {
+  const username = req.body.Username;
+  const password = req.body.Password;
+ 
+  const result = await executeSelect(
+    `SELECT TOP 1 * FROM Users WHERE Username = '${username}' AND Password = '${password}'`
+  );
+ 
+  if (result.length > 0) {
+    // User authenticated successfully, generate JWT token
+    const user = result[0];
+    const token = jwt.sign({ UserID: user.UserID, Username: user.Username }, 'GYANSYS', { expiresIn: '1h' });
+    
+    // Return the token in the response body
+    return res.status(200).json({ success: true, message: "Login successful", token: token });
+  } else {
+    return res.status(401).json({ success: false, message: "Invalid username or password" });
+  }
+});
+
+
+app.post("/register", async (req, res) => {
+  console.log(req.body);
+  const result = await executeQuery(
+    "insert into Users (Username,Password) values ('" +
+      req.body.Username +
+      "','" +
+      req.body.Password +
       "');"
   );
   return res.status(201).json(result);
 });
 
 
-app.get("/:shortURL", async (req, res) => {
-    const shortURL = req.params.shortURL;
-  
-    try {
-      // Query the database to retrieve the original URL corresponding to the short URL
-      const result = await executeQuery(
-        "SELECT OriginalURL FROM URL WHERE ShortURL = '" + shortURL + "'"
-      );
-  
-      
-  
-      // Redirect the user to the retrieved original URL
-      res.redirect(result.recordset[0].OriginalURL);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error);
-      res.status(500).send("Internal Server Error");
+
+
+
+app.get("/allUrls", async (req, res) => {
+  try {
+    // Execute SQL query to retrieve all original and shortened URLs from the URL table
+    const result = await executeQuery(
+      `SELECT OriginalURL, ShortenedURL FROM URL`
+    );
+
+    // Return the result as JSON response
+    return res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    console.error("Error fetching URLs:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+app.get("/userUrls", async (req, res) => {
+  const { UserID } = req.query;
+
+  // Check if UserID is provided
+  if (!UserID) {
+    return res.status(400).json({ success: false, message: "UserID is required" });
+  }
+
+  try {
+    // Execute SQL query to retrieve OriginalURL and ShortenedURL for the specified UserID
+    const result = await executeQuery(
+      `SELECT OriginalURL, ShortenedURL FROM URL WHERE UserID = ${UserID}`
+    );
+
+    console.log(result);
+
+    // Return the result as JSON response
+     return res.status(200).json({ success: true, data: result.recordsets });
+    
+    // return res.status(200).json(result.recordsets);
+    
+  } catch (error) {
+    console.error("Error fetching URLs:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+
+
+
+
+
+async function redirectToOriginalURL(shortURL) {
+  try {
+    // Execute SQL query to find the corresponding original URL for the given short URL
+    const result = await executeQuery(
+      `SELECT OriginalURL FROM URL WHERE ShortenedURL = '${shortURL}'`
+    );
+    
+    // Check if a matching original URL is found in the database
+    if (result.recordset.length > 0) {
+      const originalURL = result.recordset[0].OriginalURL;
+      // Redirect the user to the original URL
+      window.location.href = originalURL;
+    } else {
+      console.log("Short URL not found in the database");
+      // Handle case when short URL is not found
+      // For example, display an error message to the user
     }
-  });
+  } catch (error) {
+    console.error("Error fetching original URL:", error);
+    // Handle error, such as displaying an error message to the user
+  }
+}
+
+
+
+
+
+
 
 app.listen(8081, () => {
   console.log("listening");
