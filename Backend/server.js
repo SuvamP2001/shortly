@@ -26,7 +26,7 @@ const pool = {
 };
 
 app.get('/', (re, res) => {
-  return res.json('From BAckend Side');
+  return res.json('From Backend Side');
 });
 
 async function executeSelect(query) {
@@ -98,33 +98,21 @@ function generateShortURL(originalURL) {
 }
 
 app.post('/shorten/saveURL', async (req, res) => {
-  console.log('original link', req.body.OriginalURL);
-  const UserID = req.body.UserID;
-
   const { OriginalURL } = req.body;
 
   const baseURL = `http://localhost:8081/`;
 
-  // const ShortURL = generateShortURL(OriginalURL);
   if (!validUrl.isUri(OriginalURL)) {
     return res.status(400).json({ error: 'Bad Request' });
   }
 
-  const ShortURL = shortid.generate();
+  const shortURL = shortid.generate();
 
-  console.log(ShortURL);
   const result = await executeQuery(
-    "insert into URL (OriginalURL,ShortenedURL) values ('" +
-      req.body.OriginalURL +
-      "','" +
-      ShortURL +
-      "');"
+    "insert into URL (OriginalURL,ShortenedURL) values ('" + OriginalURL + "','" + shortURL + "');"
   );
 
-  // const shortURLs = await executeQuery("SELECT ShortenedURL FROM URL WHERE UserID = ?", [UserID]);
-
-  return res.status(201).json({ shorten_url: `${baseURL}${ShortURL}` });
-  // return res.status(201).json({result,shortURLs});
+  return res.status(201).json({ shorten_url: `${baseURL}${shortURL}` });
 });
 
 /*  USERS LIST  API */
@@ -147,13 +135,11 @@ app.post('/login', async (req, res) => {
   );
 
   if (result.length > 0) {
-    // User authenticated successfully, generate JWT token
     const user = result[0];
     const token = jwt.sign({ UserID: user.UserID, Username: user.Username }, 'GYANSYS', {
       expiresIn: '1h',
     });
 
-    // Return the token and UserID in the response body
     return res
       .status(200)
       .json({ success: true, message: 'Login successful', token: token, UserID: user.UserID });
@@ -176,10 +162,8 @@ app.post('/register', async (req, res) => {
 
 app.get('/allUrls', async (req, res) => {
   try {
-    // Execute SQL query to retrieve all original and shortened URLs from the URL table
     const result = await executeQuery(`SELECT OriginalURL, ShortenedURL FROM URL`);
 
-    // Return the result as JSON response
     return res.status(200).json({ success: true, data: result });
   } catch (error) {
     console.error('Error fetching URLs:', error);
@@ -190,23 +174,18 @@ app.get('/allUrls', async (req, res) => {
 app.get('/userUrls', async (req, res) => {
   const { UserID } = req.query;
 
-  // Check if UserID is provided
   if (!UserID) {
     return res.status(400).json({ success: false, message: 'UserID is required' });
   }
 
   try {
-    // Execute SQL query to retrieve OriginalURL and ShortenedURL for the specified UserID
     const result = await executeQuery(
       `SELECT OriginalURL, ShortenedURL FROM URL WHERE UserID = ${UserID}`
     );
 
     console.log(result);
 
-    // Return the result as JSON response
     return res.status(200).json({ success: true, data: result.recordsets });
-
-    // return res.status(200).json(result.recordsets);
   } catch (error) {
     console.error('Error fetching URLs:', error);
     return res.status(500).json({ success: false, message: 'Internal server error' });
@@ -215,24 +194,18 @@ app.get('/userUrls', async (req, res) => {
 
 async function redirectToOriginalURL(shortURL) {
   try {
-    // Execute SQL query to find the corresponding original URL for the given short URL
     const result = await executeQuery(
       `SELECT OriginalURL FROM URL WHERE ShortenedURL = '${shortURL}'`
     );
 
-    // Check if a matching original URL is found in the database
     if (result.recordset.length > 0) {
       const originalURL = result.recordset[0].OriginalURL;
-      // Redirect the user to the original URL
       window.location.href = originalURL;
     } else {
       console.log('Short URL not found in the database');
-      // Handle case when short URL is not found
-      // For example, display an error message to the user
     }
   } catch (error) {
     console.error('Error fetching original URL:', error);
-    // Handle error, such as displaying an error message to the user
   }
 }
 
