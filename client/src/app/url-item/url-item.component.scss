@@ -1,0 +1,71 @@
+@use "../../mixins/_variables.scss" as var;
+@use "../../mixins/_mixin.scss" as m;
+
+.url {
+  background-color: var.$snow-white;
+  border-radius: 10px;
+  font-weight: var.$fw-500;
+  display: flex;
+  flex-direction: column;
+
+  @media (width >= 64rem) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 1rem;
+    padding-inline: 1rem;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px;
+    border-top-style: solid;
+    border-top-color: var.$gray;
+
+    @media (width >= 64rem) {
+      display: none;
+    }
+  }
+
+  &__long {
+    padding-block: 1rem;
+
+    @media (width >= 64rem) {
+      padding-block: 0;
+      margin-block: 0;
+      margin-inline: 0;
+    }
+  }
+
+  &__short {
+    padding-block: 1rem;
+    padding-inline: 1rem;
+    color: var.$cyan;
+
+    @media (width >= 64rem) {
+      display: flex;
+      align-items: center;
+      padding-block: 0;
+      padding-inline: 0;
+    }
+
+    button {
+      width: 100%;
+      color: var.$snow-white;
+      font-size: var.$font-size;
+      font-weight: var.$fw-700;
+      background-color: var.$cyan;
+      border: none;
+      border-radius: 8px;
+      padding-block: 1rem;
+      margin-block-start: 1rem;
+
+      @media (width >= 64rem) {
+        padding-inline: 2rem;
+        padding-block: 0.8rem;
+        margin-block-start: 0;
+        margin-inline-start: 1rem;
+      }
+    }
+  }
+}

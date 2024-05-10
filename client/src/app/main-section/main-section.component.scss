@@ -1,0 +1,153 @@
+@use "../../mixins/_variables.scss" as var;
+
+main {
+  position: relative;
+  min-height: 100vh;
+  background-color: rgba(var.$grayish-violet, 0.15);
+  padding-block: 2rem;
+  padding-inline: 2rem;
+
+  @media (width >= 64rem) {
+    padding-inline: 4rem;
+  }
+}
+
+form {
+  width: calc(100% - 4rem);
+  position: absolute;
+  top: -4.5rem;
+  display: grid;
+  gap: 1rem;
+  padding-inline: 1rem;
+  padding-block: 1rem;
+  background-color: var.$dark-violet;
+  background-image: url("../../assets/images/bg-shorten-mobile.svg");
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: 80% 80%;
+  border-radius: 8px;
+
+  @media (width >= 64rem) {
+    width: calc(100% - 8rem);
+    top: -3.8rem;
+    grid-template-columns: 10fr 3fr;
+    padding-inline: 2.5rem;
+    padding-block: 2.2rem;
+    background-image: url("../../assets/images/bg-shorten-desktop.svg");
+    background-size: 100% 100%;
+  }
+
+  input[type="text"] {
+    background-color: #fff;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    padding-block: 1rem;
+    padding-inline: 1rem;
+
+    &::-webkit-input-placeholder {
+      color: var.$gray;
+      font-size: var.$fw-500;
+    }
+
+    &::-moz-placeholder {
+      color: var.$gray;
+      font-size: var.$fw-500;
+    }
+
+    &::placeholder {
+      color: var.$gray;
+      font-size: var.$fw-500;
+    }
+  }
+
+  button {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var.$snow-white;
+    letter-spacing: 1px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    padding-block: 1rem;
+    padding-inline: 1rem;
+    background-color: var.$cyan;
+  }
+}
+
+.features-container {
+  padding-block-start: 7rem;
+  text-align: center;
+
+  .feature__about {
+    margin-block-start: 7rem;
+    margin-block-end: 2rem;
+  }
+
+  .feature {
+    background-color: var.$snow-white;
+  }
+
+  .feature__title,
+  .feature-card__title {
+    color: var.$very-dark-violet;
+  }
+
+  .feature__description,
+  .feature-card__description {
+    color: var.$grayish-violet;
+    font-weight: var.$fw-500;
+    line-height: 1.8;
+  }
+
+  .features-card-container {
+    margin-block: 4rem;
+    display: grid;
+    gap: 3rem;
+
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .feature-card {
+    position: relative;
+    padding-block: 1.5rem;
+    background-color: var.$snow-white;
+    border-radius: 8px;
+    box-shadow: 0.2rem 1rem 1rem -1rem var.$grayish-violet;
+
+    &__image {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      top: -2rem;
+
+      > div {
+        width: 5rem;
+        height: 5rem;
+        align-content: center;
+        border-radius: 50%;
+        background-color: var.$dark-violet;
+      }
+
+      @media (width >= 64rem) {
+        justify-content: flex-start;
+        left: 3rem;
+      }
+    }
+
+    &__title {
+      margin-block-start: 2rem;
+    }
+  }
+}
+
+.feature--2 {
+  top: 2rem;
+}
+
+.feature--3 {
+  top: 4rem;
+}

@@ -1,0 +1,72 @@
+@use "../../mixins/variables" as var;
+@use "../../mixins/mixin" as m;
+
+.intro-header {
+  display: grid;
+  margin-block-end: 6rem;
+
+  @media (width >= 64rem) {
+    grid-template-columns: 1fr 1fr;
+    padding-inline-start: 4rem;
+    padding-block: 1rem;
+    align-items: center;
+    // gap: 2rem;
+  }
+
+  .illustration-container {
+    aspect-ratio: 1;
+    overflow: hidden;
+    align-content: center;
+    padding-inline-start: 2rem;
+
+    @media (width >= 64rem) {
+      // aspect-ratio: auto;
+      padding-inline-start: 0;
+      grid-area: 1 / 2 / span 1 / span 1;
+    }
+
+    img {
+      width: 100%;
+      transform: scale(1.35);
+      position: relative;
+      right: -4rem;
+
+      @media (width >= 64rem) {
+        right: -6.6rem;
+      }
+    }
+  }
+
+  .intro-container {
+    padding-inline: 2rem;
+    text-align: center;
+
+    @media (width >= 64rem) {
+      text-align: start;
+      padding-inline: 0;
+    }
+  }
+
+  .intro-title {
+    margin-block: 0;
+    margin-inline: 0;
+    line-height: 1.1;
+    text-justify: auto;
+    font-size: 2.6rem;
+    color: var.$very-dark-blue;
+
+    @media (min-width: 64rem) {
+      font-size: 3.7rem;
+    }
+  }
+
+  .intro-description {
+    color: var.$grayish-violet;
+    padding-block-start: 1rem;
+    padding-block-end: 2.7rem;
+  }
+
+  .btn-started {
+    @include m.btn-cyan;
+  }
+}
