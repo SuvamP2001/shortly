@@ -13,7 +13,7 @@ main {
 }
 
 form {
-  width: 85lvw;
+  width: calc(100% - 4rem);
   position: absolute;
   top: -4.5rem;
   display: grid;
@@ -28,12 +28,13 @@ form {
   border-radius: 8px;
 
   @media (width >= 64rem) {
+    width: calc(100% - 8rem);
     top: -3.8rem;
+    grid-template-columns: 10fr 3fr;
     padding-inline: 2.5rem;
     padding-block: 2.2rem;
     background-image: url("../../assets/images/bg-shorten-desktop.svg");
     background-size: 100% 100%;
-    grid-template-columns: 10fr 3fr;
   }
 
   input[type="text"] {
@@ -117,21 +118,23 @@ form {
     box-shadow: 0.2rem 1rem 1rem -1rem var.$grayish-violet;
 
     &__image {
-      width: auto;
+      width: 100%;
+      display: flex;
+      justify-content: center;
       position: absolute;
       top: -2rem;
-      left: 8rem;
-      background-color: var.$dark-violet;
-      padding-inline: 1.2rem;
-      padding-block: 1rem;
-      border-radius: 50%;
 
-      @media (width >= 64rem) {
-        left: 3rem;
+      > div {
+        width: 5rem;
+        height: 5rem;
+        align-content: center;
+        border-radius: 50%;
+        background-color: var.$dark-violet;
       }
 
-      @media (width >= 80rem) {
-        top: -2.75rem;
+      @media (width >= 64rem) {
+        justify-content: flex-start;
+        left: 3rem;
       }
     }
 

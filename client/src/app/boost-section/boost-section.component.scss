@@ -9,8 +9,9 @@
   background-image: url("../../assets/images/bg-boost-mobile.svg");
   background-repeat: no-repeat;
   background-position-x: right;
+  background-size: auto 100%;
 
-  @media (width >= 64rem) {
+  @media (width >= 45rem) {
     height: 41.5vh;
     background-image: url("../../assets/images/bg-boost-desktop.svg");
   }
