@@ -63,6 +63,28 @@ async function executeQuery(query) {
   }
 }
 
+// app.post("/:shorten_code", async(req, res) => {
+//   const shortenCode = req.params.shorten_code;
+
+//   try {
+//     const result = await executeSelect(
+//       `SELECT OriginalURL FROM URL WHERE ShortenedURL = '${shortenCode}'`
+//     );
+
+// console.log('record set', result);
+//     if (result.length > 0) {
+//       const originalURL = result[0].OriginalURL;
+//       console.log('original link', originalURL);
+//       return res.redirect(originalURL);
+//     } else {
+//       return res.status(404).json({ error: "Shortened URL not found" });
+//     }
+//   } catch (error) {
+//     console.error("Error retrieving original URL:", error);
+//     return res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+
 const crypto = require('crypto');
 
 function generateUniqueIdentifier(originalURL) {
@@ -115,7 +137,7 @@ app.post("/login", async (req, res) => {
   const password = req.body.Password;
  
   const result = await executeSelect(
-    `SELECT TOP 1 * FROM Users WHERE Username = '${username}' AND Password = '${password}'`
+    `SELECT TOP 1 UserID, Username FROM Users WHERE Username = '${username}' AND Password = '${password}'`
   );
  
   if (result.length > 0) {
@@ -123,8 +145,8 @@ app.post("/login", async (req, res) => {
     const user = result[0];
     const token = jwt.sign({ UserID: user.UserID, Username: user.Username }, 'GYANSYS', { expiresIn: '1h' });
     
-    // Return the token in the response body
-    return res.status(200).json({ success: true, message: "Login successful", token: token });
+    // Return the token and UserID in the response body
+    return res.status(200).json({ success: true, message: "Login successful", token: token, UserID: user.UserID });
   } else {
     return res.status(401).json({ success: false, message: "Invalid username or password" });
   }
