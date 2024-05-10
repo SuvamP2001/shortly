@@ -61,27 +61,27 @@ async function executeQuery(query) {
   }
 }
 
-// app.post("/:shorten_code", async(req, res) => {
-//   const shortenCode = req.params.shorten_code;
+ app.post("/:shorten_code", async(req, res) => {
+   const shortenCode = req.params.shorten_code;
 
-//   try {
-//     const result = await executeSelect(
-//       `SELECT OriginalURL FROM URL WHERE ShortenedURL = '${shortenCode}'`
-//     );
+   try {
+     const result = await executeSelect(
+       `SELECT OriginalURL FROM URL WHERE ShortenedURL = '${shortenCode}'`
+    );
 
-// console.log('record set', result);
-//     if (result.length > 0) {
-//       const originalURL = result[0].OriginalURL;
-//       console.log('original link', originalURL);
-//       return res.redirect(originalURL);
-//     } else {
-//       return res.status(404).json({ error: "Shortened URL not found" });
-//     }
-//   } catch (error) {
-//     console.error("Error retrieving original URL:", error);
-//     return res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
+ console.log('record set', result);
+     if (result.length > 0) {
+       const originalURL = result[0].OriginalURL;
+       console.log('original link', originalURL);
+       return res.redirect(originalURL);
+     } else {
+       return res.status(404).json({ error: "Shortened URL not found" });
+    }
+   } catch (error) {
+     console.error("Error retrieving original URL:", error);
+     return res.status(500).json({ error: "Internal Server Error" });
+   }
+ });
 
 const crypto = require('crypto');
 
