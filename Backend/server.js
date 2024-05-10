@@ -4,6 +4,8 @@ const sql = require('mssql');
 var bodyParser = require('body-parser');
 require('dotenv').config();
 const cors = require('cors');
+const validUrl = require('valid-url');
+const shortid = require('shortid');
 
 const app = express();
 app.use(cors());
@@ -61,27 +63,26 @@ async function executeQuery(query) {
   }
 }
 
- app.post("/:shorten_code", async(req, res) => {
-   const shortenCode = req.params.shorten_code;
+app.all('/:shorten_code', async (req, res) => {
+  const shortenCode = req.params.shorten_code;
 
-   try {
-     const result = await executeSelect(
-       `SELECT OriginalURL FROM URL WHERE ShortenedURL = '${shortenCode}'`
+  try {
+    const result = await executeSelect(
+      `SELECT OriginalURL FROM URL WHERE ShortenedURL = '${shortenCode}'`
     );
 
- console.log('record set', result);
-     if (result.length > 0) {
-       const originalURL = result[0].OriginalURL;
-       console.log('original link', originalURL);
-       return res.redirect(originalURL);
-     } else {
-       return res.status(404).json({ error: "Shortened URL not found" });
+    console.log('record set', result.length);
+    if (result.length > 0) {
+      const originalURL = result[0].OriginalURL;
+      return res.status(301).redirect(originalURL);
+    } else {
+      return res.status(404).json({ error: 'Shortened URL not found' });
     }
-   } catch (error) {
-     console.error("Error retrieving original URL:", error);
-     return res.status(500).json({ error: "Internal Server Error" });
-   }
- });
+  } catch (error) {
+    console.error('Error retrieving original URL:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 const crypto = require('crypto');
 
@@ -90,40 +91,39 @@ function generateUniqueIdentifier(originalURL) {
   hash.update(originalURL);
   return hash.digest('hex');
 }
+
 function generateShortURL(originalURL) {
   const uniqueIdentifier = generateUniqueIdentifier(originalURL);
   return Buffer.from(uniqueIdentifier).toString('base64').slice(0, 8);
 }
 
-app.post('/:code', async (req, res) => {
-  const { code } = req.body;
-  console.log(code);
-});
-
-app.post('/saveURL', async (req, res) => {
-  console.log(req.body);
+app.post('/shorten/saveURL', async (req, res) => {
+  console.log('original link', req.body.OriginalURL);
   const UserID = req.body.UserID;
 
   const { OriginalURL } = req.body;
 
   const baseURL = `http://localhost:8081/`;
 
-  const ShortURL = generateShortURL(OriginalURL);
+  // const ShortURL = generateShortURL(OriginalURL);
+  if (!validUrl.isUri(OriginalURL)) {
+    return res.status(400).json({ error: 'Bad Request' });
+  }
+
+  const ShortURL = shortid.generate();
 
   console.log(ShortURL);
   const result = await executeQuery(
-    "insert into URL (OriginalURL,ShortenedURL,UserID) values ('" +
+    "insert into URL (OriginalURL,ShortenedURL) values ('" +
       req.body.OriginalURL +
       "','" +
       ShortURL +
-      "','" +
-      UserID +
       "');"
   );
 
   // const shortURLs = await executeQuery("SELECT ShortenedURL FROM URL WHERE UserID = ?", [UserID]);
 
-  return res.status(201).json({ result });
+  return res.status(201).json({ shorten_url: `${baseURL}${ShortURL}` });
   // return res.status(201).json({result,shortURLs});
 });
 
@@ -149,10 +149,14 @@ app.post('/login', async (req, res) => {
   if (result.length > 0) {
     // User authenticated successfully, generate JWT token
     const user = result[0];
-    const token = jwt.sign({ UserID: user.UserID, Username: user.Username }, 'GYANSYS', { expiresIn: '1h' });
-    
+    const token = jwt.sign({ UserID: user.UserID, Username: user.Username }, 'GYANSYS', {
+      expiresIn: '1h',
+    });
+
     // Return the token and UserID in the response body
-    return res.status(200).json({ success: true, message: "Login successful", token: token, UserID: user.UserID });
+    return res
+      .status(200)
+      .json({ success: true, message: 'Login successful', token: token, UserID: user.UserID });
   } else {
     return res.status(401).json({ success: false, message: 'Invalid username or password' });
   }

@@ -1,5 +1,12 @@
+<!-- <div class="urls-list" >
+  <app-url-item></app-url-item>
+  <app-url-item></app-url-item> -->
+<!-- <app-url-item></app-url-item>
+</div> -->
 <div class="urls-list">
-  <app-url-item></app-url-item>
-  <app-url-item></app-url-item>
-  <app-url-item></app-url-item>
+  <app-url-item
+    *ngFor="let url of urlsList"
+    [originalLink]="url.originalLink"
+    [shortenedLink]="url.shortenedLink"
+  ></app-url-item>
 </div>

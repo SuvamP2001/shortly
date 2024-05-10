@@ -1,0 +1,16 @@
+<!-- <form (ngSubmit)="handleSubmit()">
+  <input type="text" placeholder="Shorten a link here.." aria-label="link" />
+  <button type="submit">Shorten it!</button>
+</form> -->
+
+<form (ngSubmit)="handleSubmit()">
+  <input
+    type="text"
+    placeholder="Shorten a link here.."
+    aria-label="link"
+    [(ngModel)]="originalURL"
+    name="originalURL"
+    [ngClass]="{ 'error-border': showError }"
+  />
+  <button type="submit">Shorten it!</button>
+</form>

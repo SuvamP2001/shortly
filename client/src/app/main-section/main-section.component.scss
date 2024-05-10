@@ -12,69 +12,6 @@ main {
   }
 }
 
-form {
-  width: calc(100% - 4rem);
-  position: absolute;
-  top: -4.5rem;
-  display: grid;
-  gap: 1rem;
-  padding-inline: 1rem;
-  padding-block: 1rem;
-  background-color: var.$dark-violet;
-  background-image: url("../../assets/images/bg-shorten-mobile.svg");
-  background-repeat: no-repeat;
-  background-position: right top;
-  background-size: 80% 80%;
-  border-radius: 8px;
-
-  @media (width >= 64rem) {
-    width: calc(100% - 8rem);
-    top: -3.8rem;
-    grid-template-columns: 10fr 3fr;
-    padding-inline: 2.5rem;
-    padding-block: 2.2rem;
-    background-image: url("../../assets/images/bg-shorten-desktop.svg");
-    background-size: 100% 100%;
-  }
-
-  input[type="text"] {
-    background-color: #fff;
-    border: none;
-    outline: none;
-    border-radius: 5px;
-    padding-block: 1rem;
-    padding-inline: 1rem;
-
-    &::-webkit-input-placeholder {
-      color: var.$gray;
-      font-size: var.$fw-500;
-    }
-
-    &::-moz-placeholder {
-      color: var.$gray;
-      font-size: var.$fw-500;
-    }
-
-    &::placeholder {
-      color: var.$gray;
-      font-size: var.$fw-500;
-    }
-  }
-
-  button {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var.$snow-white;
-    letter-spacing: 1px;
-    border: none;
-    outline: none;
-    border-radius: 5px;
-    padding-block: 1rem;
-    padding-inline: 1rem;
-    background-color: var.$cyan;
-  }
-}
-
 .features-container {
   padding-block-start: 7rem;
   text-align: center;
